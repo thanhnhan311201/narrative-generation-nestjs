@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { join } from 'path';
 
@@ -12,6 +13,9 @@ import { GenerativeAIModule } from '@modules/generative-ai/generative-ai.module'
 import { CloudStorageModule } from '@modules/cloud-storage/cloud-storage.module';
 import { ConversationModule } from '@modules/conversation/conversation.module';
 import { QnAModule } from '@modules/q&a/q&a.module';
+import { GateWayModule } from '@modules/gateway/gateway.module';
+import { EventModule } from '@modules/event/event.module';
+
 import { JwtAuthGuard } from '@modules/common/guards';
 
 import rootConfig from '@configs/env/';
@@ -40,6 +44,9 @@ import { entities } from '@configs/typeorm';
 		CloudStorageModule,
 		ConversationModule,
 		QnAModule,
+		EventEmitterModule.forRoot(),
+		EventModule,
+		GateWayModule,
 	],
 	controllers: [],
 	providers: [
