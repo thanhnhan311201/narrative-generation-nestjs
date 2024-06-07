@@ -23,7 +23,7 @@ export class GenerativeAIController {
 	@Public()
 	@Post('gen-story')
 	@HttpCode(HttpStatus.OK)
-	async googleLogin(@Body() body: { prompt: string }) {
+	async genStory(@Body() body: { prompt: string }) {
 		const text = await this.aiService.genStory(body.prompt);
 
 		return { status: STATUS.SUCCESS, data: text };
