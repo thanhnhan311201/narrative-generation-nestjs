@@ -10,7 +10,6 @@ export type AuthPayload = {
 	};
 	clientId: string;
 	roomId: string;
-	transferRoom: string;
 };
 
 export type AuthenticatedSocket = Socket & AuthPayload;

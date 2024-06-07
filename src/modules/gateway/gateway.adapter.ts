@@ -33,10 +33,10 @@ export class WSIoAdapter extends IoAdapter {
 			credentials: true,
 		};
 
-		// this.logger.log(`Configuring SocketIO server with CORS options: `, {
-		//   cors,
-		// });
-		// this.logger.log(`Configuring SocketIO server with port: `, { port });
+		this.logger.log(`Configuring SocketIO server with CORS options: `, {
+			cors,
+		});
+		this.logger.log(`Configuring SocketIO server with port: `, { port });
 
 		const optionsWithCORS: ServerOptions = {
 			...options,

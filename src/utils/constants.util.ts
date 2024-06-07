@@ -16,3 +16,9 @@ export enum ROUTES {
 	CONVERSATION = 'conversation',
 	Q_N_A = 'qa',
 }
+
+export enum SOCKET_EVENTS {
+	// general
+	ON_RECEIVE_NEW_CONNECTION = 'onReceiveNewConnection',
+	ON_LOGGED_OUT = 'onLoggedOut',
+}

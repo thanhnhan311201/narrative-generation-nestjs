@@ -1,10 +1,9 @@
 {
     "*/**/*.{js,jsx,ts,tsx}": [
-        "format --write",
-        "eslint --fix",
-        "eslint"
+        "npm run format",
+        "npm run lint"
     ],
     "*/**/*.{json,css,md}": [
-        "format --write"
+        "npm run format"
     ]
 }

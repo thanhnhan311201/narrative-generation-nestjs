@@ -1,4 +1,4 @@
-import { Entity, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, OneToOne, JoinColumn, OneToMany, Column } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
 import { Prompt } from './prompt.entity';
@@ -7,6 +7,9 @@ import { User } from './user.entity';
 
 @Entity()
 export class Conversation extends BaseEntity {
+	@Column()
+	title: string;
+
 	@OneToOne(() => User, (user) => user.conversations)
 	@JoinColumn()
 	creator: User;
