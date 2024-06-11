@@ -19,6 +19,16 @@ export enum ROUTES {
 
 export enum SOCKET_EVENTS {
 	// general
-	ON_RECEIVE_NEW_CONNECTION = 'onReceiveNewConnection',
-	ON_LOGGED_OUT = 'onLoggedOut',
+	NEW_CONNECTION = 'new_connection',
+	SIGNOUT = 'signout',
+
+	// conversation events
+	CONVERSATION_CREATE = 'conversation:create',
 }
+
+export enum SERVER_EVENTS {
+	// conversation events
+	CONVERSATION_CREATE = 'conversation:create',
+}
+
+export const SOCKET_CLIENT_ID_HEADER = 'socket-clientid';

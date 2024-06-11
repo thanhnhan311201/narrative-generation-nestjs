@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Conversation } from '@configs/typeorm';
 import { ConversationController } from './conversation.controller';
 import { ConversationService } from './conversation.service';
+import { ConversationAccessMiddleware } from './middlewares/conversation-access.middleware';
 
-import { SERVICES } from '@utils/constants.util';
+import { SERVICES, ROUTES } from '@utils/constants.util';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([Conversation])],
@@ -23,4 +24,10 @@ import { SERVICES } from '@utils/constants.util';
 		},
 	],
 })
-export class ConversationModule {}
+export class ConversationModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+			.apply(ConversationAccessMiddleware)
+			.forRoutes(`${ROUTES.CONVERSATION}/:id`);
+	}
+}

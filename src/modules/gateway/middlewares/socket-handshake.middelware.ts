@@ -1,11 +1,11 @@
 import { ForbiddenException, Logger } from '@nestjs/common';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import { IGatewaySessionService } from '../interfaces';
 
 import { IAuthService } from '@modules/auth/interfaces';
 import { AuthenticatedSocket } from '../types/auth.type';
-
-import { genRandomString } from '@utils/helpers.util';
 
 export const handshakeAuthMiddleware =
 	(
@@ -25,19 +25,7 @@ export const handshakeAuthMiddleware =
 		try {
 			const user = await authService.verifyAccessToken(token);
 
-			const usernameEmail =
-				user.email.split('@')[0].length > 15
-					? user.email.split('@')[0].slice(0, 15)
-					: user.email.split('@')[0];
-			let clientId: string = `${usernameEmail}@${genRandomString(5)}`;
-			const clientIds = Array.from(gatewaySessionManager.getAllSocketId());
-			while (true) {
-				if (!clientIds.includes(clientId)) {
-					break;
-				}
-
-				clientId = `${usernameEmail}@${genRandomString(5)}`;
-			}
+			const clientId: string = uuidv4();
 
 			socket.user = {
 				id: user.id,

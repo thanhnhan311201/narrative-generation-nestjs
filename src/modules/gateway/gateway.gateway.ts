@@ -14,10 +14,12 @@ import { map } from 'rxjs/operators';
 import { Server } from 'socket.io';
 
 import { AuthenticatedSocket } from './types';
-import { SOCKET_EVENTS } from '@utils/constants.util';
+import { SERVER_EVENTS, SOCKET_EVENTS } from '@utils/constants.util';
 import { IGatewaySessionService } from './interfaces';
 import { IAuthService } from '@modules/auth/interfaces';
 import { SERVICES } from '@utils/constants.util';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Conversation } from '@configs/typeorm';
 
 @WebSocketGateway()
 export class SocketGateway
@@ -32,7 +34,7 @@ export class SocketGateway
 		@Inject(SERVICES.AUTH_SERVICE)
 		private readonly authService: IAuthService,
 		@Inject(SERVICES.GATEWAY_SESSION_SERVICE)
-		readonly sessionManager: IGatewaySessionService,
+		readonly sessionService: IGatewaySessionService,
 	) {}
 
 	// handle after init io server
@@ -51,7 +53,7 @@ export class SocketGateway
 
 		client.join(client.roomId);
 
-		client.emit(SOCKET_EVENTS.ON_RECEIVE_NEW_CONNECTION, {
+		client.emit(SOCKET_EVENTS.NEW_CONNECTION, {
 			userInfo: client.user,
 			clientId: client.clientId,
 		});
@@ -79,5 +81,22 @@ export class SocketGateway
 		return data;
 	}
 
-	// ----------------------------------Event listeners-------------------------------
+	// ----------------------------------Socket Event Listeners-------------------------------
+
+	// ----------------------------------Server Event Listeners-------------------------------
+	@OnEvent(SERVER_EVENTS.CONVERSATION_CREATE)
+	handleCreateConversation({
+		clientId,
+		conversation,
+	}: {
+		clientId: string;
+		conversation: Conversation;
+	}) {
+		const socket = this.sessionService.getUserSocket(clientId);
+		if (socket)
+			this.server
+				.of('/')
+				.in(socket.roomId)
+				.emit(SOCKET_EVENTS.CONVERSATION_CREATE, conversation);
+	}
 }

@@ -8,7 +8,7 @@ import { GateWayModule } from './gateway.module';
 
 import { IAuthService } from '@modules/auth/interfaces';
 import { IGatewaySessionService } from './interfaces';
-import { SERVICES } from '@utils/constants.util';
+import { SERVICES, SOCKET_CLIENT_ID_HEADER } from '@utils/constants.util';
 
 export class WSIoAdapter extends IoAdapter {
 	private readonly logger = new Logger(WSIoAdapter.name);
@@ -29,14 +29,18 @@ export class WSIoAdapter extends IoAdapter {
 		const cors = {
 			origin: process.env.BASE_URL_CLIENT,
 			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-			allowedHeaders: ['Content-Type', 'Authorization'],
+			allowedHeaders: [
+				'Content-Type',
+				'Authorization',
+				SOCKET_CLIENT_ID_HEADER,
+			],
 			credentials: true,
 		};
 
 		this.logger.log(`Configuring SocketIO server with CORS options: `, {
 			cors,
 		});
-		this.logger.log(`Configuring SocketIO server with port: `, { port });
+		// this.logger.log(`Configuring SocketIO server with port: `, { port });
 
 		const optionsWithCORS: ServerOptions = {
 			...options,

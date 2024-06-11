@@ -1,3 +1,7 @@
+import { Request } from 'express';
+
+import { User } from '@configs/typeorm';
+
 export enum PROVIDER {
 	GOOGLE = 'google',
 	GITHUB = 'github',
@@ -14,4 +18,8 @@ export enum PROMPT_TYPE {
 	AUDIO = 'audio',
 	TEXT = 'text',
 	VIDEO = 'video',
+}
+
+export interface AuthenticatedRequest extends Request {
+	user: User;
 }

@@ -5,6 +5,7 @@ import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { WSIoAdapter } from '@modules/gateway/gateway.adapter';
+import { SOCKET_CLIENT_ID_HEADER } from '@utils/constants.util';
 
 async function bootstrap() {
 	const logger = new Logger('Main (main.ts)');
@@ -13,7 +14,11 @@ async function bootstrap() {
 		cors: {
 			origin: process.env.BASE_URL_CLIENT,
 			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-			allowedHeaders: ['Content-Type', 'Authorization'],
+			allowedHeaders: [
+				'Content-Type',
+				'Authorization',
+				SOCKET_CLIENT_ID_HEADER,
+			],
 			credentials: true,
 		},
 	});
