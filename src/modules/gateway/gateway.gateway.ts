@@ -20,6 +20,9 @@ import { IAuthService } from '@modules/auth/interfaces';
 import { SERVICES } from '@utils/constants.util';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Conversation } from '@configs/typeorm';
+import { CreatePromptResponse } from '@modules/q&a/type/service.type';
+import { IQnAService } from '@modules/q&a/interfaces';
+import { IGenerativeAIService } from '@modules/generative-ai/interfaces';
 
 @WebSocketGateway()
 export class SocketGateway
@@ -35,6 +38,10 @@ export class SocketGateway
 		private readonly authService: IAuthService,
 		@Inject(SERVICES.GATEWAY_SESSION_SERVICE)
 		readonly sessionService: IGatewaySessionService,
+		@Inject(SERVICES.Q_N_A_SERVICE)
+		private readonly qnAService: IQnAService,
+		@Inject(SERVICES.GENERATIVE_AI_SERVICE)
+		private readonly aiService: IGenerativeAIService,
 	) {}
 
 	// handle after init io server
@@ -84,8 +91,9 @@ export class SocketGateway
 	// ----------------------------------Socket Event Listeners-------------------------------
 
 	// ----------------------------------Server Event Listeners-------------------------------
+	// ----------------Conversation----------------
 	@OnEvent(SERVER_EVENTS.CONVERSATION_CREATE)
-	handleCreateConversation({
+	handleCreateConversationEvent({
 		clientId,
 		conversation,
 	}: {
@@ -98,5 +106,36 @@ export class SocketGateway
 				.of('/')
 				.in(socket.roomId)
 				.emit(SOCKET_EVENTS.CONVERSATION_CREATE, conversation);
+	}
+
+	// ----------------Q&A----------------
+	@OnEvent(SERVER_EVENTS.PROMPT_CREATE)
+	async handleCreatePromptEvent({
+		response,
+		clientId,
+	}: {
+		response: CreatePromptResponse;
+		clientId: string;
+	}) {
+		const socket = this.sessionService.getUserSocket(clientId);
+		if (socket)
+			this.server
+				.of('/')
+				.in(socket.roomId)
+				.emit(SOCKET_EVENTS.PROMPT_CREATE, response.prompt);
+
+		const answer = await this.aiService.generateAnswer(
+			response.conversation.id,
+			response.prompt,
+		);
+		const savedAnswer = await this.qnAService.createAnswer({
+			id: response.conversation.id,
+			content: answer,
+		});
+		if (socket)
+			this.server
+				.of('/')
+				.in(socket.roomId)
+				.emit(SOCKET_EVENTS.ANSWER_CREATE, savedAnswer.answer);
 	}
 }

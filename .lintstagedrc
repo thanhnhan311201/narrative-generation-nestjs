@@ -1,9 +1,6 @@
 {
-    "*/**/*.{js,jsx,ts,tsx}": [
+    "{src,apps,libs,test}/**/*.ts": [
         "npm run format",
         "npm run lint"
-    ],
-    "*/**/*.{json,css,md}": [
-        "npm run format"
     ]
 }

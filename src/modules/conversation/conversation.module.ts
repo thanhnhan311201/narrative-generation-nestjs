@@ -7,9 +7,10 @@ import { ConversationService } from './conversation.service';
 import { ConversationAccessMiddleware } from './middlewares/conversation-access.middleware';
 
 import { SERVICES, ROUTES } from '@utils/constants.util';
+import { AuthModule } from '@modules/auth/auth.module';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Conversation])],
+	imports: [TypeOrmModule.forFeature([Conversation]), AuthModule],
 	controllers: [ConversationController],
 	providers: [
 		{

@@ -14,7 +14,7 @@ export enum ROUTES {
 	AUTH = 'auth',
 	USER = 'user',
 	CONVERSATION = 'conversation',
-	Q_N_A = 'qa',
+	Q_N_A = 'conversation/:id/prompt',
 }
 
 export enum SOCKET_EVENTS {
@@ -24,11 +24,18 @@ export enum SOCKET_EVENTS {
 
 	// conversation events
 	CONVERSATION_CREATE = 'conversation:create',
+
+	// prompt events
+	PROMPT_CREATE = 'prompt:create',
+	ANSWER_CREATE = 'answer:create',
 }
 
 export enum SERVER_EVENTS {
 	// conversation events
 	CONVERSATION_CREATE = 'conversation:create',
+
+	// prompt events
+	PROMPT_CREATE = 'prompt:create',
 }
 
 export const SOCKET_CLIENT_ID_HEADER = 'socket-clientid';

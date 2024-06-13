@@ -12,4 +12,5 @@ export interface IConversationService {
 	findById(id: string): Promise<Conversation | null>;
 	hasAccess(params: ConversationAccessParams): Promise<boolean>;
 	getConversationContent(id: string): Promise<Conversation>;
+	save(conversation: Conversation): Promise<Conversation>;
 }

@@ -3,8 +3,6 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Conversation } from './conversation.entity';
 
-import { PROMPT_TYPE } from '@modules/common/types';
-
 @Entity()
 export class Prompt extends BaseEntity {
 	@Column()
@@ -14,9 +12,7 @@ export class Prompt extends BaseEntity {
 	conversation: Conversation;
 
 	@Column({
-		type: 'enum',
-		name: 'prompt_type',
-		enum: PROMPT_TYPE,
+		default: null,
 	})
-	promptType: PROMPT_TYPE;
+	attachment: string | null;
 }

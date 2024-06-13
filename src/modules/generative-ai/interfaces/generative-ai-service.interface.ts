@@ -1,3 +1,5 @@
+import { Prompt } from '@configs/typeorm';
+
 export interface IGenerativeAIService {
-	genStory(prompt: string): Promise<string>;
+	generateAnswer(conversationId: string, prompt: Prompt): Promise<string>;
 }

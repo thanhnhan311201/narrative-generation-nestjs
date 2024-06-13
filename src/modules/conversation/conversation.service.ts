@@ -62,12 +62,16 @@ export class ConversationService implements IConversationService {
 			relations: ['prompts', 'answers'],
 			order: {
 				prompts: {
-					updatedAt: 'DESC',
+					updatedAt: 'ASC',
 				},
 				answers: {
-					updatedAt: 'DESC',
+					updatedAt: 'ASC',
 				},
 			},
 		});
+	}
+
+	save(conversation: Conversation): Promise<Conversation> {
+		return this.conversationRepo.save(conversation);
 	}
 }

@@ -5,12 +5,12 @@ import {
 	S3Client,
 	DeleteObjectCommand,
 	GetObjectCommand,
-	GetObjectCommandOutput,
 } from '@aws-sdk/client-s3';
 import { Progress, Upload } from '@aws-sdk/lib-storage';
 
 import { ICloudStorageService } from './interfaces';
 import { IConfig, IThirdPartyConfig } from '@configs/env';
+import { Readable } from 'stream';
 
 @Injectable({})
 export class AwsS3Service implements ICloudStorageService {
@@ -34,7 +34,7 @@ export class AwsS3Service implements ICloudStorageService {
 		try {
 			const bucketName =
 				this.cfgService.get<IThirdPartyConfig>('thirdParty').awsS3.bucketName;
-			const key = `${Date.now().toString()}-${file.filename}`;
+			const key = `${Date.now().toString()}-${file.originalname}`;
 
 			const parallelS3Upload = new Upload({
 				client: this.s3Client,
@@ -61,7 +61,8 @@ export class AwsS3Service implements ICloudStorageService {
 				key: key,
 			};
 		} catch (error) {
-			throw new BadRequestException();
+			console.log(error.message);
+			throw new BadRequestException(error.message);
 		}
 	}
 
@@ -82,7 +83,9 @@ export class AwsS3Service implements ICloudStorageService {
 		}
 	}
 
-	async getFileFromBucket(key: string): Promise<GetObjectCommandOutput> {
+	async getFileFromBucket(
+		key: string,
+	): Promise<{ fileBuffer: Buffer; contentType: string }> {
 		try {
 			const bucketName =
 				this.cfgService.get<IThirdPartyConfig>('thirdParty').awsS3.bucketName;
@@ -93,9 +96,15 @@ export class AwsS3Service implements ICloudStorageService {
 				}),
 			);
 
-			return obj;
+			const chunks: Buffer[] = [];
+			for await (const chunk of obj.Body as Readable) {
+				chunks.push(chunk);
+			}
+			const fileBuffer = Buffer.concat(chunks);
+
+			return { fileBuffer, contentType: obj.ContentType };
 		} catch (error) {
-			throw new BadRequestException();
+			throw new BadRequestException(error.message);
 		}
 	}
 }

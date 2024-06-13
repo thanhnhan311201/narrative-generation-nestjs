@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { GenerativeAIController } from './generative-ai.controller';
 import { Gemini15ProService } from './gemini-1_5-pro.service';
 
 import { SERVICES } from '@utils/constants.util';
+import { CloudStorageModule } from '@modules/cloud-storage/cloud-storage.module';
+import { ConversationModule } from '@modules/conversation/conversation.module';
 
 @Module({
-	imports: [],
-	controllers: [GenerativeAIController],
+	imports: [CloudStorageModule, ConversationModule],
 	providers: [
 		{
 			provide: SERVICES.GENERATIVE_AI_SERVICE,

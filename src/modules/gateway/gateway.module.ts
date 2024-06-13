@@ -5,9 +5,12 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { SocketGateway } from './gateway.gateway';
 
 import { SERVICES } from '@utils/constants.util';
+import { ConversationModule } from '@modules/conversation/conversation.module';
+import { QnAModule } from '@modules/q&a/q&a.module';
+import { GenerativeAIModule } from '@modules/generative-ai/generative-ai.module';
 
 @Module({
-	imports: [AuthModule],
+	imports: [AuthModule, ConversationModule, QnAModule, GenerativeAIModule],
 	providers: [
 		SocketGateway,
 		{
