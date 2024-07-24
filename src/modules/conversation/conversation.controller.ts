@@ -45,6 +45,15 @@ export class ConversationController {
 		return { status: STATUS.SUCCESS };
 	}
 
+	@Get(':id')
+	@HttpCode(HttpStatus.OK)
+	async getConversationContent(@Param('id') id: string) {
+		const conversationContent =
+			await this.conversationService.getConversationContent(id);
+
+		return { status: STATUS.SUCCESS, data: { conversationContent } };
+	}
+
 	@Get()
 	@HttpCode(HttpStatus.OK)
 	async getConversations(@CurrentUser() user: UserDto) {
@@ -53,14 +62,5 @@ export class ConversationController {
 		);
 
 		return { status: STATUS.SUCCESS, data: { conversations } };
-	}
-
-	@Get(':id')
-	@HttpCode(HttpStatus.OK)
-	async getConversationContent(@Param('id') id: string) {
-		const conversationContent =
-			await this.conversationService.getConversationContent(id);
-
-		return { status: STATUS.SUCCESS, data: { conversationContent } };
 	}
 }

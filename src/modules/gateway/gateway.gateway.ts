@@ -118,11 +118,13 @@ export class SocketGateway
 		clientId: string;
 	}) {
 		const socket = this.sessionService.getUserSocket(clientId);
-		if (socket)
+		if (socket) {
 			this.server
 				.of('/')
 				.in(socket.roomId)
 				.emit(SOCKET_EVENTS.PROMPT_CREATE, response.prompt);
+			console.log('new prompt');
+		}
 
 		const answer = await this.aiService.generateAnswer(
 			response.conversation.id,
@@ -132,10 +134,12 @@ export class SocketGateway
 			id: response.conversation.id,
 			content: answer,
 		});
-		if (socket)
+		if (socket) {
 			this.server
 				.of('/')
 				.in(socket.roomId)
 				.emit(SOCKET_EVENTS.ANSWER_CREATE, savedAnswer.answer);
+			console.log('new answer');
+		}
 	}
 }
